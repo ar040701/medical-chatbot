@@ -1,9 +1,8 @@
+torch==2.2.0+cpu
+transformers==4.34.0
 streamlit
 langchain
-langchain-core
-langchain-community
 langchain-huggingface
-langchain-groq
+langchain-community
 faiss-cpu
 python-dotenv
-sentence-transformers
