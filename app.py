@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+API_KEY = os.environ.get("GROQ_API_KEY")
+HF_TOKEN = os.environ.get("HF_TOKEN")
 DB_FAISS_PATH = "vector_store/db_faiss"
 
 # ✅ Cache vector DB
