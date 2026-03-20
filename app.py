@@ -95,11 +95,11 @@ def main():
         st.session_state.messages.append({"role": "user", "content": user_input})
 
         rag_chain = get_rag_chain()
-
         
-        with st.chat_message("assistant"):
-            response = st.write_stream(rag_chain.stream(user_input))
+        with st.spinner("Thinking..."):
+            response = rag_chain.invoke(user_input)
 
+        st.chat_message("assistant").markdown(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
 
 if __name__ == "__main__":
