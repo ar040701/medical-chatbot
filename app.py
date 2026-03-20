@@ -37,11 +37,21 @@ def load_llm():
 
 # ✅ Prompt
 prompt = ChatPromptTemplate.from_template("""
-Use the context to answer the question.
-If you don't know, say you don't know.
+You are a helpful medical assistant.
 
-Context: {context}
-Question: {question}
+Use the context below to answer the question.
+If the context is insufficient, use your general knowledge to provide a helpful answer.
+
+Always:
+- Be accurate
+- Avoid giving harmful advice
+- Suggest consulting a doctor when necessary
+
+Context:
+{context}
+
+Question:
+{question}
 
 Answer:
 """)
