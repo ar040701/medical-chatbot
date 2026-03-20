@@ -39,13 +39,13 @@ def load_llm():
 prompt = ChatPromptTemplate.from_template("""
 You are a helpful medical assistant.
 
-Use the context below to answer the question.
-If the context is insufficient, use your general knowledge to provide a helpful answer.
+Answer the question using the context if it is relevant.
+If the context is incomplete or does not answer the question, ignore it and use your own knowledge.
 
-Always:
-- Be accurate
-- Avoid giving harmful advice
-- Suggest consulting a doctor when necessary
+Never say "I don't know" just because the context is missing.
+
+Provide a clear, helpful, and safe medical response.
+Always mention that the user should consult a doctor for medical advice.
 
 Context:
 {context}
@@ -58,9 +58,7 @@ Answer:
 
 # ✅ Format docs
 def format_docs(docs):
-    if not docs:
-        return "No relevant context found."
-    return "\n\n".join(doc.page_content for doc in docs)
+    return "\n\n".join(doc.page_content for doc in docs) if docs else ""
 
 # ✅ Build RAG chain
 @st.cache_resource
@@ -108,6 +106,11 @@ def main():
         
         with st.spinner("Thinking..."):
             response = rag_chain.invoke(user_input)
+            
+            
+            if "i don't know" in response.lower():
+                llm = load_llm()
+                response = llm.invoke(user_input)
 
         st.chat_message("assistant").markdown(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
