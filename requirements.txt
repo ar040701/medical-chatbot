@@ -7,3 +7,4 @@ torch>=2.2.0
 faiss-cpu==1.7.4
 python-dotenv==1.0.1
 langchain-groq>=0.1.0
+sentence-transformers>=2.3.0
