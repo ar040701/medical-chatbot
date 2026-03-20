@@ -110,7 +110,7 @@ def main():
             
             if "i don't know" in response.lower():
                 llm = load_llm()
-                response = llm.invoke(user_input)
+                response = llm.invoke(user_input).content
 
         st.chat_message("assistant").markdown(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
