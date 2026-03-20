@@ -56,7 +56,8 @@ def format_docs(docs):
 @st.cache_resource
 def get_rag_chain():
     db = load_vector_store()
-    retriever = db.as_retriever(search_kwargs={"k": 3})
+    retriever = db.as_retriever(search_type="mmr",
+    search_kwargs={"k": 5, "fetch_k": 10})
     llm = load_llm()
 
     rag_chain = (
@@ -77,12 +78,17 @@ def main():
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
-
+    
     # Show chat history
     for message in st.session_state.messages:
         st.chat_message(message["role"]).markdown(message["content"])
 
     user_input = st.chat_input("Ask your question...")
+    
+    if st.sidebar.button("Clear Chat"):
+        st.session_state.messages = []
+        
+    
 
     if user_input:
         st.chat_message("user").markdown(user_input)
@@ -90,8 +96,12 @@ def main():
 
         rag_chain = get_rag_chain()
 
-        # 🔥 REAL RESPONSE (not hardcoded)
-        response = rag_chain.invoke(user_input)
+        
+        for chunk in rag_chain.stream(user_input):
+            st.write(chunk)
+                
+        with st.spinner("Thinking..."):
+            response = rag_chain.invoke(user_input)
 
         st.chat_message("assistant").markdown(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
