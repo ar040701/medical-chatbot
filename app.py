@@ -97,13 +97,9 @@ def main():
         rag_chain = get_rag_chain()
 
         
-        for chunk in rag_chain.stream(user_input):
-            st.write(chunk)
-                
-        with st.spinner("Thinking..."):
-            response = rag_chain.invoke(user_input)
+        with st.chat_message("assistant"):
+            response = st.write_stream(rag_chain.stream(user_input))
 
-        st.chat_message("assistant").markdown(response)
         st.session_state.messages.append({"role": "assistant", "content": response})
 
 if __name__ == "__main__":
